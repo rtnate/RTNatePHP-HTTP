@@ -1,0 +1,15 @@
+{
+    "name": "rtnatephp/http",
+    "description": "Basic HTTP Request Wrapper using Guzzle/Client",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nate Taylor",
+            "email": "nate@rtelectronix.com"
+        }
+    ]
+}
