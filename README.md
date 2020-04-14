@@ -34,14 +34,16 @@ $client - new GuzzleHttp\Client();
 $request = new RequestManager($url, $client);
 ```
 ### Changing The Request Method
-By default the manager will before a GET request.
+By default the manager will perform a GET request.
 The request method can be changed like this:
 ```
 $request->setMethod('POST')
 ```
 ### Adding Headers
 Headers can be added as an associative array
-`$request->setHeaders(['accepts' => 'application/json', 'Content-Type' => 'application/json'])`
+```
+$request->setHeaders(['accepts' => 'application/json', 'Content-Type' => 'application/json'])
+```
 
 ### Setting Query Parameters
 Instead of adding query parameters to the url, they can be set like follows.
@@ -65,21 +67,35 @@ $request->make($body);
 
 ### Retrieving the Response
 Response contents can be easily retrieved as a string:
-`$data = $request->getResponseContents()`
+```
+$data = $request->getResponseContents();
+```
 This will return an empty string if a valid response hasn't been received yet.
 The ResponseInterface can be accessed directly:
-`$response = $request->getResponse()`
+```
+$response = $request->getResponse();
+```
 Or the StreamInterface to the body:
-`$body = $request->getResponseBody()`
+```
+$body = $request->getResponseBody();
+```
 Both of these methods will return null if no valid response has been received
 
 ### Inheriting this class
 Inheriting this class can be useful.  
 It's easy to override the default url
-`protected $url = 'https://api.example.com/v1/'; `
+```
+protected $url = 'https://api.example.com/v1/'; 
+```
 Or any default headers
-`protected $headers = ['accepts' => 'application/json']; `
+```
+protected $headers = ['accepts' => 'application/json']; 
+```
 Or the method
-`protected $reqMethod = 'POST'; `
+```
+protected $reqMethod = 'POST'; 
+```
 Or any default query parameters
-`protected $query = []; `
+```
+protected $query = [];
+```
