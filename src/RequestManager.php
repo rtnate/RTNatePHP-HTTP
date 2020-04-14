@@ -5,6 +5,14 @@ namespace RTNatePHP\HTTP;
 use GuzzleHttp\Client as Client;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * GuzzleHttp\Client wrapper for making HTTP Requests
+ * 
+ * @author Nate Taylor - nate@rtelectronix.com
+ * @version 1.0 
+ * 
+ * @use Psr\Http\Message\StreamInterface
+ */
 class RequestManager
 {
     /**
@@ -53,7 +61,7 @@ class RequestManager
      */
     public function __construct($url = '', $client = null)
     {
-        $this->url = $url;
+        if ($url) $this->url = $url;
         if ($client == null)
         {
             $this->client = new Client();
@@ -89,14 +97,24 @@ class RequestManager
     }
 
     /**
-     * Sets a query parameter as a $key => $value pair
+     * Sets query parameters as a $key => $value pair.
      * 
-     * @param string $key - The parameter name
-     * @param mixed $value - The parameter value, must be a valid strval
+     * @param string $key   The parameter key 
+     * @param mixed $value  The parameter value, must be a valid strval
      */
     public function setQueryParam(string $key, $value)
     {
         $this->query[$key] = $value;
+    }
+
+    /**
+     * Sets query parameters using the supplied associative array.
+     * 
+     * @param array $params The query parameters to set
+     */
+    public function setQueryParams(array $params)
+    {
+        $this->query = array_merge($this->query, $params);
     }
 
     /**
@@ -110,7 +128,7 @@ class RequestManager
     }
 
     /**
-     * Get's the query parameters as a urlencoded string
+     * Gets the query parameters as a urlencoded string
      * 
      * @return string - The query string
      */
@@ -129,12 +147,45 @@ class RequestManager
     }
 
     /**
+     * Retrieve the HTTP Response returned after performing make()
+     * 
+     * @return ResponseInterface|null Returns null when no response has been received
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Retrieve the HTTP Response Body as a stream returned after performing make()
+     * 
+     * @return StreamInterface|null Returns null when no response has been received
+     */
+    public function getResponseBody()
+    {
+        if ($this->response) return $this->getResponse()->getBody();
+        else return null;
+    }
+
+    /**
+     * Retrieve the HTTP Response Body Contents returned after performing make()
+     * 
+     * @return string|null Returns null when no response has been received
+     */
+    public function getResponseContents()
+    {
+        if ($this->response) return $this->getResponseBody()->getContents();
+        else return '';
+    }
+
+    /**
      * Perform the HTTP request with the supplied body
      * 
      * @param string $body - The HTTP Request body
+     * @throws HTTPRequestException on failure
      * @return true If the HTTP Request succeeds
      */
-    public function make($body = '')
+    public function make(string $body = '')
     {
         $this->response = null;
         try{
